@@ -24,8 +24,10 @@ module Tomalog
                        view_specs: false,
                        helper_specs: false,
                        routing_specs: false
+    end
+    # ------------ここまで--------------
+    
+    # ---以下追加---　認証トークンをremoteフォームに埋め込む
+    config.action_view.embed_authenticity_token_in_remote_forms = true
   end
-
-  # ---以下追加---　認証トークンをremoteフォームに埋め込む
-  config.action_view.embed_authenticity_token_in_remote_forms = true
 end
