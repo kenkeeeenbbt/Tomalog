@@ -89,4 +89,18 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '一意性の検証' do
+    it 'メールアドレスが小文字化されていること' do
+        @user.email = "TEST@EXAMPLE.COM"
+        @user.save
+        expect(@user.email).to eq("test@example.com")
+    end
+
+    it '重複したメールアドレスの場合、無効であること' do
+        user1 = create(:user, name: 'taro', email: 'taro@example.com')
+        user2 = build(:user, name: 'jiro', email: user1.email)
+        expect(user2).not_to be_valid
+    end
+  end
 end
