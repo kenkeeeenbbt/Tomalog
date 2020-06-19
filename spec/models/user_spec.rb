@@ -19,4 +19,21 @@ RSpec.describe User, type: :model do
       expect(user).to be_valid
     end
   end
+
+  describe '存在性の検証' do
+    it '名前がない場合、無効であること' do
+        @user.name = ' '
+        expect(@user.valid?).to eq(false)
+    end
+
+    it 'メールアドレスがない場合、無効であること' do
+        @user.email = ' '
+        expect(@user.valid?).to eq(false)
+    end
+
+    it 'パスワードがない場合、無効であること' do
+        @user.password = @user.password_confirmation = ' ' * 8
+        expect(@user.valid?).to eq(false)
+    end
+  end
 end
