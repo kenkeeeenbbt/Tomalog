@@ -12,6 +12,7 @@ class SessionsController < ApplicationController
     else
       flash.now[:danger] = 'メールアドレスまたはパスワードが間違っています'
       render 'new'
+      redirect_back_or user
     end
   end
 
