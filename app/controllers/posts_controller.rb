@@ -25,16 +25,15 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
-    @post = Post.new(post_params)
-
-    respond_to do |format|
-      if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post }
-      else
-        format.html { render :new }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
+    post = current_user.posts.build(post_params)
+    if post.save
+      flash[:success] = "投稿しました"
+      redirect_to root_path
+    else
+      redirect_to new_post_path, flash: {
+        post: post,
+        error_messages: post.errors.full_messages
+      }
     end
   end
 
@@ -53,13 +52,10 @@ class PostsController < ApplicationController
   end
 
   # DELETE /posts/1
-  # DELETE /posts/1.json
   def destroy
     @post.destroy
-    respond_to do |format|
-      format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    flash[:success] = "削除しました"
+    redirect_to root_path
   end
 
   private
@@ -71,5 +67,9 @@ class PostsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def post_params
       params.require(:post).permit(:content, :user_id)
+    end
+
+    def correct_user
+      redirect_to(root_url) unless (@post.user == current_user) || current_user.admin?
     end
 end
